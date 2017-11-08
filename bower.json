@@ -1,0 +1,9 @@
+{
+  "name": "dynamic-layout-demo",
+  "version": "0.1.0",
+  "dependencies": {
+    "angular-dynamic-layout": "latest",
+    "bootstrap": "latest",
+    "bootcards": "latest"
+  }
+}

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html ng-app="gridApp" lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="bower_components/bootcards/dist/css/bootcards-desktop.min.css">
+    </script>
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css">
+    <link rel="stylesheet" href="app/stylesheets/style.css">
+    </script>
+    <script src="bower_components/angular/angular.min.js"></script>
+    <script src="bower_components/angular-animate/angular-animate.min.js"></script>
+    <script src="bower_components/angular-dynamic-layout/dist/angular-dynamic-layout.min.js"></script>
+    <script src="app/app.js"></script>
+    <title>Funds Listing</title>
+</head>
+
+<body ng-controller="GridContainer as gc">
+    <div ng-class="{loading: isLoading == true}"></div>
+    <div class="container-fluid">
+        <h1 class="text-center title">Funds Listing
+            <p><small>A Funds Listing App</small></p>
+        </h1>
+        <div class="features">
+            <div class="row">
+                <div class="pull-right mt-40">
+                    <input type="text" class="search" ng-model="searchText" placeholder="Search for Fund">
+                    <button class="btn btn-sm btn-primary" ng-click="search()">Search</button>
+                </div>
+                <div class="col-md-4">
+                    <h5>Sort by</h5>
+                    <div class="btn-group" role="group">
+                        <button class="btn btn-default" ng-class="{active: sortOrder === 'Date'}" ng-click="sortData('Date')">Date</button>
+                        <button class="btn btn-default" ng-class="{active: sortOrder === 'Net Asset Value'}" ng-click="sortData('Net Asset Value')">Net Asset Value</button>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <ul class="pagination pull-right">
+                    <li ng-repeat="n in [].constructor(nOfPage) track by $index" ng-class="{active: activePage === $index+1}"><a ng-click="nextPage($index+1)">{{$index+1}}</a></li>
+                </ul>
+            </div>
+            <div>
+                <label class="pull-right">Showing {{((activePage - 1) * filteredRecords ) + 1}} to {{filteredRecords * activePage}} of {{totalRecords}} funds</label>
+            </div>
+        </div>
+        <div dynamic-layout items="cards" filters="filters" rankers="rankers"></div>
+        <h2 class="center-heading" ng-if="noData">No data available</h2>
+    </div>
+</body>
+
+</html>
