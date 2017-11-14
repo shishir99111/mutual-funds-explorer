@@ -25,7 +25,7 @@
         <div class="features">
             <div class="row">
                 <div class="pull-right mt-40">
-                    <input type="text" class="search" ng-model="searchText" placeholder="Search for Fund">
+                    <input type="text" class="search" ng-model="searchText" ng-enter="search()" placeholder="Search for Fund">
                     <button class="btn btn-sm btn-primary" ng-click="search()">Search</button>
                 </div>
                 <div class="col-md-4">

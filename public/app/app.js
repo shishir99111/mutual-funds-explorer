@@ -4,6 +4,24 @@
  */
 var gridApp = angular.module('gridApp', ['dynamicLayout']);
 
+
+/*
+This directive allows us to pass a function in on an enter key to do what we want.
+ */
+gridApp.directive('ngEnter', function() {
+  return function(scope, element, attrs) {
+    element.bind("keydown keypress", function(event) {
+      if (event.which === 13) {
+        scope.$apply(function() {
+          scope.$eval(attrs.ngEnter);
+        });
+
+        event.preventDefault();
+      }
+    });
+  };
+});
+
 /**
  * An example of controller that can be used to manipulate a specific card
  *
@@ -11,14 +29,14 @@ var gridApp = angular.module('gridApp', ['dynamicLayout']);
  * animations are completed
  */
 gridApp.controller('cardController', ['$scope', '$rootScope', '$timeout', '$http',
-  function ($scope, $rootScope, $timeout, $http) {}
+  function($scope, $rootScope, $timeout, $http) {}
 ]);
 
 /**
  * The main controller that is responsible for created the cards, filters, 
  * rankers
  */
-gridApp.controller('GridContainer', ['$scope', '$http', function ($scope, $http) {
+gridApp.controller('GridContainer', ['$scope', '$http', function($scope, $http) {
   $scope.pageLimit = 700;
   $scope.sortOrder = 'Date';
   $scope.activePage = 1;
@@ -27,12 +45,12 @@ gridApp.controller('GridContainer', ['$scope', '$http', function ($scope, $http)
   function getCardData(params) {
     $scope.cards = [];
     $http.get("/funds", { params: params })
-      .then(function (response) {
+      .then(function(response) {
         $scope.nOfPage = parseInt(response.data.totalRecords / 700) + 1;
         $scope.filteredRecords = response.data.filteredRecords;
         $scope.totalRecords = response.data.totalRecords;
         if (response.data.data.length !== 0) {
-          response.data.data.forEach(function (fund) {
+          response.data.data.forEach(function(fund) {
             $scope.cards.push({
               id: 1,
               template: "app/partials/card.html",
@@ -44,6 +62,7 @@ gridApp.controller('GridContainer', ['$scope', '$http', function ($scope, $http)
               }
             });
           })
+          $scope.noData = false;
         } else {
           $scope.noData = true;
         }
@@ -55,21 +74,21 @@ gridApp.controller('GridContainer', ['$scope', '$http', function ($scope, $http)
   getCardData({ page: 1, limit: $scope.pageLimit, sort: $scope.sortOrder });
 
   // get data of page specified
-  $scope.nextPage = function (page) {
+  $scope.nextPage = function(page) {
     $scope.isLoading = true;
     $scope.activePage = page;
     getCardData({ page: page, limit: $scope.pageLimit, sort: $scope.sortOrder, search: $scope.searchText });
   }
 
   // sorting of data on the basis of given parameter
-  $scope.sortData = function (param) {
+  $scope.sortData = function(param) {
     $scope.isLoading = true;
     $scope.sortOrder = param;
     getCardData({ page: $scope.activePage, limit: $scope.pageLimit, sort: $scope.sortOrder, search: $scope.searchText });
   }
 
   // populating data on the basis of fund name
-  $scope.search = function () {
+  $scope.search = function() {
     $scope.isLoading = true;
     $scope.activePage = 1;
     getCardData({ page: $scope.activePage, limit: $scope.pageLimit, sort: $scope.sortOrder, search: $scope.searchText });
